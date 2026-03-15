@@ -14,16 +14,230 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_suggestions: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          id: string
+          predicted_disease: string
+          recommendation: string | null
+          report_id: string
+          risk_level: string
+        }
+        Insert: {
+          confidence_score: number
+          created_at?: string
+          id?: string
+          predicted_disease: string
+          recommendation?: string | null
+          report_id: string
+          risk_level: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          id?: string
+          predicted_disease?: string
+          recommendation?: string | null
+          report_id?: string
+          risk_level?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_suggestions_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "disease_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alerts: {
+        Row: {
+          alert_level: string
+          case_count: number
+          created_at: string
+          disease: string
+          id: string
+          is_active: boolean
+          location: string
+        }
+        Insert: {
+          alert_level: string
+          case_count?: number
+          created_at?: string
+          disease: string
+          id?: string
+          is_active?: boolean
+          location: string
+        }
+        Update: {
+          alert_level?: string
+          case_count?: number
+          created_at?: string
+          disease?: string
+          id?: string
+          is_active?: boolean
+          location?: string
+        }
+        Relationships: []
+      }
+      awareness_content: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          image_url: string | null
+          title: string
+        }
+        Insert: {
+          category: string
+          content: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          title: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          response: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          response?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          response?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      disease_reports: {
+        Row: {
+          age: number
+          created_at: string
+          gender: string
+          id: string
+          location: string
+          patient_name: string
+          reported_by: string
+          sanitation_condition: string | null
+          suspected_disease: string | null
+          symptoms: string[]
+          water_source: string | null
+        }
+        Insert: {
+          age: number
+          created_at?: string
+          gender: string
+          id?: string
+          location: string
+          patient_name: string
+          reported_by: string
+          sanitation_condition?: string | null
+          suspected_disease?: string | null
+          symptoms: string[]
+          water_source?: string | null
+        }
+        Update: {
+          age?: number
+          created_at?: string
+          gender?: string
+          id?: string
+          location?: string
+          patient_name?: string
+          reported_by?: string
+          sanitation_condition?: string | null
+          suspected_disease?: string | null
+          symptoms?: string[]
+          water_source?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          location: string | null
+          name: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          name: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          name?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "citizen" | "asha_worker" | "health_authority"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +364,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["citizen", "asha_worker", "health_authority"],
+    },
   },
 } as const
