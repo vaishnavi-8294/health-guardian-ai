@@ -1,1 +1,10 @@
 project_id = "suyufubazzakbkqcmped"
+
+[functions.health-chat]
+verify_jwt = false
+
+[functions.analyze-disease]
+verify_jwt = false
+
+[functions.outbreak-detection]
+verify_jwt = false
