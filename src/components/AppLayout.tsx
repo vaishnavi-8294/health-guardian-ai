@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Droplets, LogOut, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import NotificationBell from '@/components/NotificationBell';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, role, signOut } = useAuth();
@@ -58,6 +59,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
             <span className="hidden rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground md:inline-block">
               {roleLabel}
             </span>
+            <NotificationBell />
             <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sign out">
               <LogOut className="h-4 w-4" />
             </Button>

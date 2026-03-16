@@ -69,7 +69,26 @@ serve(async (req) => {
             alert_level: alertLevel,
           }).select().single();
           
-          if (data) newAlerts.push(data);
+          if (data) {
+            newAlerts.push(data);
+
+            // Notify all health authorities + asha workers
+            const { data: targetUsers } = await supabase
+              .from("user_roles")
+              .select("user_id, role")
+              .in("role", ["health_authority", "asha_worker"]);
+
+            if (targetUsers && targetUsers.length > 0) {
+              const notifications = targetUsers.map((u: any) => ({
+                user_id: u.user_id,
+                title: `${alertLevel.charAt(0).toUpperCase() + alertLevel.slice(1)} Alert: ${cluster.disease}`,
+                message: `${cluster.count} cases of ${cluster.disease} detected in ${cluster.location} in the last 24 hours.`,
+                type: alertLevel,
+                alert_id: data.id,
+              }));
+              await supabase.from("notifications").insert(notifications);
+            }
+          }
         }
       }
     }
