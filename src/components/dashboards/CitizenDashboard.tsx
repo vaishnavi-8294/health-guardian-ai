@@ -3,14 +3,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { MessageCircle, BookOpen, Bell, Shield } from 'lucide-react';
+import { MessageCircle, BookOpen, Bell, Shield, BarChart3 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+
+const CHART_COLORS = ['hsl(199, 89%, 38%)', 'hsl(168, 65%, 42%)', 'hsl(38, 92%, 50%)', 'hsl(0, 72%, 51%)', 'hsl(280, 60%, 50%)'];
 
 const CitizenDashboard = () => {
   const [alerts, setAlerts] = useState<any[]>([]);
 
   useEffect(() => {
-    supabase.from('alerts').select('*').eq('is_active', true).order('created_at', { ascending: false }).limit(5)
+    supabase.from('alerts').select('*').eq('is_active', true).order('created_at', { ascending: false })
       .then(({ data }) => setAlerts(data || []));
   }, []);
 
@@ -19,6 +22,20 @@ const CitizenDashboard = () => {
     { icon: BookOpen, title: 'Awareness', desc: 'Learn about disease prevention', to: '/awareness', color: 'bg-secondary/10 text-secondary' },
     { icon: Bell, title: 'Symptom Checker', desc: 'Report your symptoms', to: '/chat', color: 'bg-warning/10 text-warning' },
   ];
+
+  // Disease-wise alert bar chart
+  const diseaseAlertData = alerts.reduce((acc: Record<string, number>, a) => {
+    acc[a.disease] = (acc[a.disease] || 0) + a.case_count;
+    return acc;
+  }, {});
+  const barData = Object.entries(diseaseAlertData).map(([disease, cases]) => ({ disease, cases }));
+
+  // Location-wise bar chart
+  const locationAlertData = alerts.reduce((acc: Record<string, number>, a) => {
+    acc[a.location] = (acc[a.location] || 0) + a.case_count;
+    return acc;
+  }, {});
+  const locationBarData = Object.entries(locationAlertData).slice(0, 8).map(([location, cases]) => ({ location, cases }));
 
   return (
     <div className="space-y-6">
@@ -46,6 +63,54 @@ const CitizenDashboard = () => {
           </motion.div>
         ))}
       </div>
+
+      {barData.length > 0 && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 font-heading">
+                <BarChart3 className="h-5 w-5 text-primary" />
+                Active Cases by Disease
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={barData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="disease" stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 12 }} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip />
+                  <Bar dataKey="cases" radius={[4, 4, 0, 0]}>
+                    {barData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 font-heading">
+                <BarChart3 className="h-5 w-5 text-secondary" />
+                Cases by Location
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {locationBarData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={locationBarData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="location" stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 12 }} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip />
+                    <Bar dataKey="cases" fill="hsl(168, 65%, 42%)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : <p className="text-muted-foreground py-8 text-center">No location data</p>}
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {alerts.length > 0 && (
         <Card>
