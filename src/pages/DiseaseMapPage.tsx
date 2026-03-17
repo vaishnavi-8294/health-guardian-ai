@@ -307,7 +307,6 @@ const DiseaseMapPage = () => {
             <div
               className="grid gap-6 lg:grid-cols-2"
             >
-            >
               {diseaseData.length > 0 && (
                 <Card>
                   <CardHeader>
