@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Activity, AlertTriangle, Users, FileText, TrendingUp, Shield } from 'lucide-react';
-import { motion } from 'framer-motion';
+// animation removed due to framer-motion v12 type changes
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 
 const CHART_COLORS = ['hsl(199, 89%, 38%)', 'hsl(168, 65%, 42%)', 'hsl(38, 92%, 50%)', 'hsl(0, 72%, 51%)', 'hsl(280, 60%, 50%)'];
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s, i) => (
-          <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+          <div key={s.label}>
             <Card>
               <CardContent className="flex items-center gap-4 p-6">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${s.color}`}>
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         ))}
       </div>
 

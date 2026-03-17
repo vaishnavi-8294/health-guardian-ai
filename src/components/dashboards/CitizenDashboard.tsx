@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { MessageCircle, BookOpen, Bell, Shield, BarChart3 } from 'lucide-react';
-import { motion } from 'framer-motion';
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const CHART_COLORS = ['hsl(199, 89%, 38%)', 'hsl(168, 65%, 42%)', 'hsl(38, 92%, 50%)', 'hsl(0, 72%, 51%)', 'hsl(280, 60%, 50%)'];
@@ -46,7 +46,7 @@ const CitizenDashboard = () => {
 
       <div className="grid gap-4 sm:grid-cols-3">
         {features.map((f, i) => (
-          <motion.div key={f.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+          <div key={f.title}>
             <Link to={f.to}>
               <Card className="cursor-pointer transition-all hover:shadow-card hover:-translate-y-1">
                 <CardContent className="flex items-center gap-4 p-6">
@@ -60,7 +60,7 @@ const CitizenDashboard = () => {
                 </CardContent>
               </Card>
             </Link>
-          </motion.div>
+          </div>
         ))}
       </div>
 

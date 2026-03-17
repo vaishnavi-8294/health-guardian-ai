@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, ArrowLeft, Activity, AlertTriangle, BarChart3 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -303,12 +303,8 @@ const DiseaseMapPage = () => {
         </div>
 
         {/* Charts Section */}
-        <AnimatePresence>
           {(diseaseData.length > 0 || locationBreakdown.length > 0) && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
+            <div
               className="grid gap-6 lg:grid-cols-2"
             >
               {diseaseData.length > 0 && (
@@ -367,9 +363,8 @@ const DiseaseMapPage = () => {
                   </CardContent>
                 </Card>
               )}
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div>
     </AppLayout>
   );

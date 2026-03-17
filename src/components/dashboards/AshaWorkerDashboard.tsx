@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { FilePlus, FileText, Activity, AlertTriangle, BarChart3 } from 'lucide-react';
-import { motion } from 'framer-motion';
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const CHART_COLORS = ['hsl(199, 89%, 38%)', 'hsl(168, 65%, 42%)', 'hsl(38, 92%, 50%)', 'hsl(0, 72%, 51%)', 'hsl(280, 60%, 50%)'];
@@ -59,7 +59,7 @@ const AshaWorkerDashboard = () => {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <div>
           <Card>
             <CardContent className="flex items-center gap-4 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -71,8 +71,8 @@ const AshaWorkerDashboard = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+        </div>
+        <div>
           <Card>
             <CardContent className="flex items-center gap-4 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
@@ -84,8 +84,8 @@ const AshaWorkerDashboard = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        </div>
+        <div>
           <Card>
             <CardContent className="flex items-center gap-4 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-warning/10 text-warning">
@@ -97,7 +97,7 @@ const AshaWorkerDashboard = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
 
       {(diseaseBarData.length > 0 || riskBarData.length > 0) && (
