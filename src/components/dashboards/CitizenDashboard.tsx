@@ -46,7 +46,7 @@ const CitizenDashboard = () => {
 
       <div className="grid gap-4 sm:grid-cols-3">
         {features.map((f, i) => (
-          <motion.div key={f.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+          <div key={f.title}>
             <Link to={f.to}>
               <Card className="cursor-pointer transition-all hover:shadow-card hover:-translate-y-1">
                 <CardContent className="flex items-center gap-4 p-6">
