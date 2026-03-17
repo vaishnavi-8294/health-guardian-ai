@@ -59,7 +59,7 @@ const AshaWorkerDashboard = () => {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <div>
           <Card>
             <CardContent className="flex items-center gap-4 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
