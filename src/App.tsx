@@ -15,6 +15,7 @@ import MyReportsPage from "./pages/MyReportsPage.tsx";
 import AllReportsPage from "./pages/AllReportsPage.tsx";
 import AlertsPage from "./pages/AlertsPage.tsx";
 import PredictionsPage from "./pages/PredictionsPage.tsx";
+import DiseaseMapPage from "./pages/DiseaseMapPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
