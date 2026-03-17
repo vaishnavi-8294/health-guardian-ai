@@ -97,7 +97,7 @@ const AshaWorkerDashboard = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
 
       {(diseaseBarData.length > 0 || riskBarData.length > 0) && (

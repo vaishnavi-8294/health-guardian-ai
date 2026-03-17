@@ -364,9 +364,8 @@ const DiseaseMapPage = () => {
                   </CardContent>
                 </Card>
               )}
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div>
     </AppLayout>
   );

@@ -60,7 +60,7 @@ const CitizenDashboard = () => {
                 </CardContent>
               </Card>
             </Link>
-          </motion.div>
+          </div>
         ))}
       </div>
 
