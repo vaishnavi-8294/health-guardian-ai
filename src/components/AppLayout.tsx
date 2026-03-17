@@ -19,14 +19,17 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     const items: { label: string; to: string }[] = [];
     if (role === 'citizen') {
       items.push({ label: 'Dashboard', to: '/' });
+      items.push({ label: 'Disease Map', to: '/disease-map' });
       items.push({ label: 'Awareness', to: '/awareness' });
       items.push({ label: 'Chat', to: '/chat' });
     } else if (role === 'asha_worker') {
       items.push({ label: 'Dashboard', to: '/' });
+      items.push({ label: 'Disease Map', to: '/disease-map' });
       items.push({ label: 'New Report', to: '/report' });
       items.push({ label: 'My Reports', to: '/my-reports' });
     } else if (role === 'health_authority') {
       items.push({ label: 'Dashboard', to: '/' });
+      items.push({ label: 'Disease Map', to: '/disease-map' });
       items.push({ label: 'Reports', to: '/all-reports' });
       items.push({ label: 'Alerts', to: '/alerts' });
       items.push({ label: 'AI Predictions', to: '/predictions' });
