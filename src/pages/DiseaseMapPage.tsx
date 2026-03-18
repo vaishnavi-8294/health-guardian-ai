@@ -120,13 +120,7 @@ const DiseaseMapPage = () => {
 
   const getCountForGeo = (geoName: string) => {
     const name = geoName.toLowerCase().trim();
-    let total = 0;
-    Object.entries(stateCounts).forEach(([loc, count]) => {
-      if (loc.includes(name) || name.includes(loc)) {
-        total += count;
-      }
-    });
-    return total;
+    return stateCounts[name] || 0;
   };
 
   // Get alerts for a specific state
