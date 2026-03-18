@@ -126,29 +126,19 @@ const DiseaseMapPage = () => {
   // Get alerts for a specific state
   const getAlertsForGeo = (geoName: string) => {
     const name = geoName.toLowerCase().trim();
-    return alerts.filter(a => {
-      const loc = a.location.toLowerCase().trim();
-      return loc.includes(name) || name.includes(loc);
-    });
+    return alerts.filter(a => resolveToState(a.location) === name);
   };
 
-  // Filter reports for selected state
   const filteredReports = useMemo(() => {
     if (!selectedState) return reports;
     const stateLower = selectedState.toLowerCase();
-    return reports.filter(r => {
-      const loc = r.location.toLowerCase();
-      return loc.includes(stateLower) || stateLower.includes(loc);
-    });
+    return reports.filter(r => resolveToState(r.location) === stateLower);
   }, [reports, selectedState]);
 
   const filteredAlerts = useMemo(() => {
     if (!selectedState) return alerts;
     const stateLower = selectedState.toLowerCase();
-    return alerts.filter(a => {
-      const loc = a.location.toLowerCase();
-      return loc.includes(stateLower) || stateLower.includes(loc);
-    });
+    return alerts.filter(a => resolveToState(a.location) === stateLower);
   }, [alerts, selectedState]);
 
   // Disease distribution for the selected region
