@@ -167,18 +167,7 @@ const DiseaseMapPage = () => {
                   center={selectedState ? [82, 22] : [82, 22]}
                   zoom={selectedState ? 2 : 1}
                 >
-                  <Geographies geography={INDIA_TOPO_URL} parseGeographies={(geos) => {
-                      // Merge districts into states
-                      const stateMap: Record<string, any> = {};
-                      geos.forEach((geo: any) => {
-                        const stateName = geo.properties.st_nm || geo.properties.NAME_1 || geo.properties.name || '';
-                        if (!stateName) return;
-                        if (!stateMap[stateName]) {
-                          stateMap[stateName] = { ...geo, properties: { ...geo.properties, st_nm: stateName } };
-                        }
-                      });
-                      return geos;
-                    }}>
+                  <Geographies geography={INDIA_TOPO_URL}>
                     {({ geographies }) =>
                       geographies.map((geo) => {
                         const stateName = geo.properties.st_nm || geo.properties.NAME_1 || geo.properties.name || geo.properties.ST_NM || '';
