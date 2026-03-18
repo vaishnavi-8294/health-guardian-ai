@@ -82,6 +82,15 @@ const DiseaseMapPage = () => {
     return total;
   };
 
+  // Get alerts for a specific state
+  const getAlertsForGeo = (geoName: string) => {
+    const name = geoName.toLowerCase().trim();
+    return alerts.filter(a => {
+      const loc = a.location.toLowerCase().trim();
+      return loc.includes(name) || name.includes(loc);
+    });
+  };
+
   // Filter reports for selected state
   const filteredReports = useMemo(() => {
     if (!selectedState) return reports;
