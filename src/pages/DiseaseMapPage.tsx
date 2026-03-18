@@ -12,6 +12,53 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 
 const INDIA_TOPO_URL = '/india-topo.json';
 
+// Map known cities/districts to their parent state for geo matching
+const CITY_TO_STATE: Record<string, string> = {
+  'noida': 'uttar pradesh', 'greater noida': 'uttar pradesh', 'lucknow': 'uttar pradesh',
+  'agra': 'uttar pradesh', 'varanasi': 'uttar pradesh', 'kanpur': 'uttar pradesh',
+  'prayagraj': 'uttar pradesh', 'allahabad': 'uttar pradesh', 'meerut': 'uttar pradesh',
+  'ghaziabad': 'uttar pradesh', 'mathura': 'uttar pradesh', 'aligarh': 'uttar pradesh',
+  'bareilly': 'uttar pradesh', 'moradabad': 'uttar pradesh', 'gorakhpur': 'uttar pradesh',
+  'mumbai': 'maharashtra', 'pune': 'maharashtra', 'nagpur': 'maharashtra', 'thane': 'maharashtra',
+  'nashik': 'maharashtra', 'aurangabad': 'maharashtra', 'solapur': 'maharashtra',
+  'delhi': 'nct of delhi', 'new delhi': 'nct of delhi',
+  'bengaluru': 'karnataka', 'bangalore': 'karnataka', 'mysuru': 'karnataka', 'mysore': 'karnataka',
+  'chennai': 'tamil nadu', 'coimbatore': 'tamil nadu', 'madurai': 'tamil nadu',
+  'hyderabad': 'telangana', 'secunderabad': 'telangana', 'warangal': 'telangana',
+  'kolkata': 'west bengal', 'howrah': 'west bengal', 'durgapur': 'west bengal',
+  'ahmedabad': 'gujarat', 'surat': 'gujarat', 'vadodara': 'gujarat', 'rajkot': 'gujarat',
+  'jaipur': 'rajasthan', 'jodhpur': 'rajasthan', 'udaipur': 'rajasthan', 'kota': 'rajasthan',
+  'patna': 'bihar', 'gaya': 'bihar', 'muzaffarpur': 'bihar',
+  'bhopal': 'madhya pradesh', 'indore': 'madhya pradesh', 'gwalior': 'madhya pradesh',
+  'chandigarh': 'chandigarh', 'shimla': 'himachal pradesh', 'dehradun': 'uttarakhand',
+  'ranchi': 'jharkhand', 'jamshedpur': 'jharkhand', 'dhanbad': 'jharkhand',
+  'bhubaneswar': 'odisha', 'cuttack': 'odisha', 'raipur': 'chhattisgarh',
+  'thiruvananthapuram': 'kerala', 'kochi': 'kerala', 'kozhikode': 'kerala',
+  'guwahati': 'assam', 'imphal': 'manipur', 'shillong': 'meghalaya',
+  'gangtok': 'sikkim', 'agartala': 'tripura', 'aizawl': 'mizoram',
+  'kohima': 'nagaland', 'itanagar': 'arunachal pradesh',
+  'panaji': 'goa', 'jammu': 'jammu & kashmir', 'srinagar': 'jammu & kashmir',
+  'leh': 'ladakh', 'pondicherry': 'puducherry', 'puducherry': 'puducherry',
+  'port blair': 'andaman & nicobar', 'amritsar': 'punjab', 'ludhiana': 'punjab',
+  'visakhapatnam': 'andhra pradesh', 'vijayawada': 'andhra pradesh', 'tirupati': 'andhra pradesh',
+  'uttarpradesh': 'uttar pradesh', 'uttar pradesh': 'uttar pradesh',
+};
+
+// Resolve a report location to a state name
+const resolveToState = (location: string): string => {
+  const loc = location.toLowerCase().trim();
+  if (CITY_TO_STATE[loc]) return CITY_TO_STATE[loc];
+  const parts = loc.split(/[,\s]+/).map(p => p.trim()).filter(Boolean);
+  for (const part of parts) {
+    if (CITY_TO_STATE[part]) return CITY_TO_STATE[part];
+  }
+  for (let i = 0; i < parts.length - 1; i++) {
+    const combined = parts[i] + ' ' + parts[i + 1];
+    if (CITY_TO_STATE[combined]) return CITY_TO_STATE[combined];
+  }
+  return loc;
+};
+
 const CHART_COLORS = [
   'hsl(199, 89%, 38%)', 'hsl(168, 65%, 42%)', 'hsl(38, 92%, 50%)',
   'hsl(0, 72%, 51%)', 'hsl(280, 60%, 50%)', 'hsl(210, 70%, 50%)',
@@ -63,8 +110,8 @@ const DiseaseMapPage = () => {
   const stateCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     reports.forEach(r => {
-      const loc = r.location.toLowerCase().trim();
-      counts[loc] = (counts[loc] || 0) + 1;
+      const state = resolveToState(r.location);
+      counts[state] = (counts[state] || 0) + 1;
     });
     return counts;
   }, [reports]);
@@ -73,41 +120,25 @@ const DiseaseMapPage = () => {
 
   const getCountForGeo = (geoName: string) => {
     const name = geoName.toLowerCase().trim();
-    let total = 0;
-    Object.entries(stateCounts).forEach(([loc, count]) => {
-      if (loc.includes(name) || name.includes(loc)) {
-        total += count;
-      }
-    });
-    return total;
+    return stateCounts[name] || 0;
   };
 
   // Get alerts for a specific state
   const getAlertsForGeo = (geoName: string) => {
     const name = geoName.toLowerCase().trim();
-    return alerts.filter(a => {
-      const loc = a.location.toLowerCase().trim();
-      return loc.includes(name) || name.includes(loc);
-    });
+    return alerts.filter(a => resolveToState(a.location) === name);
   };
 
-  // Filter reports for selected state
   const filteredReports = useMemo(() => {
     if (!selectedState) return reports;
     const stateLower = selectedState.toLowerCase();
-    return reports.filter(r => {
-      const loc = r.location.toLowerCase();
-      return loc.includes(stateLower) || stateLower.includes(loc);
-    });
+    return reports.filter(r => resolveToState(r.location) === stateLower);
   }, [reports, selectedState]);
 
   const filteredAlerts = useMemo(() => {
     if (!selectedState) return alerts;
     const stateLower = selectedState.toLowerCase();
-    return alerts.filter(a => {
-      const loc = a.location.toLowerCase();
-      return loc.includes(stateLower) || stateLower.includes(loc);
-    });
+    return alerts.filter(a => resolveToState(a.location) === stateLower);
   }, [alerts, selectedState]);
 
   // Disease distribution for the selected region
