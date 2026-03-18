@@ -82,6 +82,15 @@ const DiseaseMapPage = () => {
     return total;
   };
 
+  // Get alerts for a specific state
+  const getAlertsForGeo = (geoName: string) => {
+    const name = geoName.toLowerCase().trim();
+    return alerts.filter(a => {
+      const loc = a.location.toLowerCase().trim();
+      return loc.includes(name) || name.includes(loc);
+    });
+  };
+
   // Filter reports for selected state
   const filteredReports = useMemo(() => {
     if (!selectedState) return reports;
@@ -153,6 +162,15 @@ const DiseaseMapPage = () => {
                 >
                   <p className="font-semibold text-foreground">{hoveredState}</p>
                   <p className="text-muted-foreground">{getCountForGeo(hoveredState)} cases reported</p>
+                  {getAlertsForGeo(hoveredState).length > 0 && (
+                    <div className="mt-1 border-t pt-1">
+                      {getAlertsForGeo(hoveredState).map(a => (
+                        <p key={a.id} className="text-xs text-destructive font-medium">
+                          ⚠ {a.disease}: {a.case_count} cases ({a.alert_level})
+                        </p>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
               <ComposableMap
@@ -173,7 +191,6 @@ const DiseaseMapPage = () => {
                         const stateName = geo.properties.st_nm || geo.properties.NAME_1 || geo.properties.name || geo.properties.ST_NM || '';
                         const count = getCountForGeo(stateName);
                         const isSelected = selectedState?.toLowerCase() === stateName.toLowerCase();
-                        const isHovered = hoveredState === stateName;
 
                         return (
                           <Geography
@@ -299,6 +316,35 @@ const DiseaseMapPage = () => {
                 </CardContent>
               </Card>
             )}
+
+            {/* Recent Active Cases */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="font-heading text-lg flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-secondary" />
+                  Recent Cases {selectedState ? `in ${selectedState}` : ''}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {filteredReports.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No cases reported yet.</p>
+                ) : (
+                  <div className="space-y-2 max-h-[250px] overflow-y-auto">
+                    {filteredReports.slice(0, 15).map(report => (
+                      <div key={report.id} className="flex items-center justify-between rounded-lg border p-2.5 text-sm">
+                        <div>
+                          <p className="font-medium text-foreground">{report.suspected_disease || 'Unknown'}</p>
+                          <p className="text-xs text-muted-foreground">{report.location} • Age {report.age}, {report.gender}</p>
+                        </div>
+                        <Badge variant="secondary" className="text-xs">
+                          {new Date(report.created_at).toLocaleDateString()}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
 
