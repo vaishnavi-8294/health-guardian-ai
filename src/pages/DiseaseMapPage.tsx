@@ -110,8 +110,8 @@ const DiseaseMapPage = () => {
   const stateCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     reports.forEach(r => {
-      const loc = r.location.toLowerCase().trim();
-      counts[loc] = (counts[loc] || 0) + 1;
+      const state = resolveToState(r.location);
+      counts[state] = (counts[state] || 0) + 1;
     });
     return counts;
   }, [reports]);
